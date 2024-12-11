@@ -15,8 +15,19 @@ class ArchievePageViewModel extends ReactiveViewModel {
   List<DiaryEntry> get entriesArchieve => _diaryService.entriesArchieve;
   int get archivedLength => _diaryService.entriesArchieve.length;
 
-  void navigateBack(){
+  void navigateBack() {
     _navigationService.back();
+  }
+
+  void unArchiveEnetry(DiaryEntry entry) {
+    _diaryService.removeFromArchieve(entry);
+  }
+
+  void removeEntry(
+    DiaryEntry entry,
+  ) {
+    _diaryService.removeFromArchieve(entry);
+    notifyListeners();
   }
 
   void openText({DiaryEntry? entry}) {
@@ -26,6 +37,7 @@ class ArchievePageViewModel extends ReactiveViewModel {
 
   void toggleFavorite(DiaryEntry entry) {
     _diaryService.toggleFavorite(entry);
+    _diaryService.addToAndremoveFrom(entry);
   }
 
   @override

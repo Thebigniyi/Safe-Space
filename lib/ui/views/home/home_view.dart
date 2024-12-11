@@ -41,13 +41,67 @@ class HomeView extends StackedView<HomeViewModel> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: [
+              Row(
+                children: [
+                  MaterialButton(
+                      onPressed: (){},
+                    color: Colors.blue,
+                    padding: EdgeInsets.all(15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Text("Favorites", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
+                  ),
+                  SizedBox(width: 15.0,),
+                  MaterialButton(
+                    onPressed: () => viewModel.navigateToArchieve(),
+                    color: Colors.blue,
+                    padding: EdgeInsets.all(15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Text("Archives", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
+                  )
+                ],
+              ),
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: viewModel.entriesLength,
                 itemBuilder: (context, index) {
                   final entry = viewModel.entries[index];
-                  return GestureDetector(
-                    onLongPress: () => viewModel.popUpButton(context, entry),
+                  return Dismissible(
+                    key: Key(index.toString()),
+                    background: Container(
+                      color: Colors.green,
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.archive,
+                        color: Colors.black,
+                      ),
+                    ),
+                    secondaryBackground: Container(
+                      color: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        viewModel.archieveEntry(entry);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$entry archived"),
+                        ));
+                      } else if (direction == DismissDirection.startToEnd) {
+                        viewModel.removeEntry(entry);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$entry deleted"),
+                        ));
+                      }
+                    },
                     child: Column(
                       children: [
                         const Divider(),
@@ -74,14 +128,14 @@ class HomeView extends StackedView<HomeViewModel> {
                                 child: IconButton(
                                   icon: Icon(Icons.favorite),
                                   color: entry.isfavorite ? Colors.red : null,
-                                  onPressed: () => viewModel.toggleFavorite(entry),
+                                  onPressed: () =>
+                                      viewModel.toggleFavorite(entry),
                                 ),
                               ),
                             ],
                           ),
                           onTap: () => viewModel.openText(entry: entry),
                         ),
-
                       ],
                     ),
                   );
@@ -103,6 +157,24 @@ class HomeView extends StackedView<HomeViewModel> {
                 leading: Icon(Icons.share),
                 title: Text(
                   "Share events",
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.all(5.0),
+                leading: Icon(Icons.favorite),
+                title: Text(
+                  "Favorites",
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
+                ),
+                onTap: () {},
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.all(5.0),
+                leading: Icon(Icons.archive),
+                title: Text(
+                  "Archive",
                   style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
                 ),
                 onTap: () {},
@@ -134,18 +206,14 @@ class HomeView extends StackedView<HomeViewModel> {
                 ),
                 onTap: () {},
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(5.0),
-                  leading: Icon(Icons.logout),
-                  title: const Text(
-                    "Logout",
-                    style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
-                  ),
-                  onTap: () {},
+              ListTile(
+                contentPadding: EdgeInsets.all(5.0),
+                leading: Icon(Icons.logout),
+                title: const Text(
+                  "Logout",
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w400),
                 ),
+                onTap: () {},
               ),
             ],
           ),

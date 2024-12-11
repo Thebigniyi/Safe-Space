@@ -13,58 +13,101 @@ class ArchievePageView extends StackedView<ArchievePageViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () => viewModel.navigateBack(),
           ),
-          title: const Text("Profile"),
+          title: const Text("Archived"),
           centerTitle: true,
         ),
-      body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
+        body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
                 itemCount: viewModel.archivedLength,
-                itemBuilder: (context, index){
-                    final entry = viewModel.entriesArchieve[index];
-                    return Column(
+                itemBuilder: (context, index) {
+                  final entry = viewModel.entriesArchieve[index];
+                  return Dismissible(
+                    key: Key(index.toString()),
+                    background: Container(
+                      color: Colors.green,
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.unarchive,
+                        color: Colors.black,
+                      ),
+                    ),
+                    secondaryBackground: Container(
+                      color: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      alignment: Alignment.centerLeft,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        viewModel.unArchiveEnetry(entry);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$entry archived"),
+                        ));
+                      } else if (direction == DismissDirection.startToEnd) {
+                        viewModel.removeEntry(entry);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("$entry deleted"),
+                        ));
+                      }
+                    },
+                    child: Column(
                       children: [
-                        SizedBox(height: 5.0,),
-                        Divider(),
+                        const Divider(),
                         ListTile(
                           title: Text(
-                              entry.title.isNotEmpty
-                                  ? entry.title : "No Title",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,),
-                          subtitle: Text(entry.content,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,),
+                            entry.title.isNotEmpty ? entry.title : "No title",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            entry.content,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ), // Show only the date part
                           trailing: Column(
                             children: [
-                              Text(entry.date.toLocal().toString().split("")[0]),
-                              IconButton(
-                                  onPressed: () => viewModel.toggleFavorite(entry),
-                                  icon: Icon(Icons.favorite,
-                                  color: entry.isfavorite ? Colors.red : null,)),
-
+                              Text(
+                                entry.date.toLocal().toString().split(' ')[0],
+                              ),
+                              const SizedBox(
+                                height: 1.0,
+                              ),
+                              Expanded(
+                                child: IconButton(
+                                  icon: Icon(Icons.favorite),
+                                  color: entry.isfavorite ? Colors.red : null,
+                                  onPressed: () =>
+                                      viewModel.toggleFavorite(entry),
+                                ),
+                              ),
                             ],
                           ),
                           onTap: () => viewModel.openText(entry: entry),
-                        )
+                        ),
                       ],
-                    );
-                },)
-              ],
-            ),
-      ))
-    );
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+        )));
   }
 
   @override

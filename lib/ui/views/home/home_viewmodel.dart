@@ -43,8 +43,13 @@ class HomeViewModel extends ReactiveViewModel {
     _navigationService.navigateTo(Routes.archievePageView);
   }
 
+  void navigateToFavorPage() {
+    _navigationService.navigateTo(Routes.favoredPageView);
+  }
+
   void toggleFavorite(DiaryEntry entry) {
     _diaryService.toggleFavorite(entry);
+    _diaryService.addToAndremoveFrom(entry);
   }
 
   void removeEntry(
@@ -66,61 +71,10 @@ class HomeViewModel extends ReactiveViewModel {
     );
   }
 
-  void popUpButton(BuildContext context, entry) {
-    final RenderBox button = _buttonKey.currentContext!
-        .findRenderObject() as RenderBox;
-    final RenderBox overlay = Overlay.of(context)!.context
-        .findRenderObject() as RenderBox;
 
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(
-            button.size.bottomRight(Offset.zero), ancestor: overlay),
-      ),
-      Offset.zero & overlay.size,
-    );
 
-    showMenu(
-      context: context,
-      position: position,
-      items: [
-        PopupMenuItem(
-          value: Text(delete),
-          child: const Text('Delete'),
-          onTap: () => removeEntry(entry),
-        ),
-        PopupMenuItem(
-          value: Text(archive),
-          child: const Text('Archive'),
-          onTap: () => navigateToArchieve(),
-        ),
-      ],
-    );
-  }
   @override
   List<ListenableServiceMixin> get listenableServices => [_diaryService];
-
-
-  void showTopNotification(BuildContext context, String message) {
-    Flushbar(
-      message: message,
-      messageSize: 20.0,
-      margin: const EdgeInsets.all(8.0),
-      padding: EdgeInsets.all(10.0),
-      borderRadius: BorderRadius.circular(15.0),
-      backgroundColor: Colors.black87,
-      icon: const Icon(
-        Icons.info,
-        color: Colors.white,
-      ),
-      duration: Duration(seconds: 3),
-      flushbarPosition: FlushbarPosition.TOP,
-    ).show(context);
-  }
-
-
-
 }
 
 class DiaryEntry {

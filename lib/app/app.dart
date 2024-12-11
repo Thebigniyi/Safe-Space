@@ -14,6 +14,7 @@ import 'package:diary_project/ui/views/profile/profile_view.dart';
 import 'package:diary_project/services/dairy_profile_service.dart';
 import 'package:diary_project/ui/views/edit_profile/edit_profile_view.dart';
 import 'package:diary_project/ui/views/archieve_page/archieve_page_view.dart';
+import 'package:diary_project/ui/views/favored_page/favored_page_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -28,6 +29,7 @@ import 'package:diary_project/ui/views/archieve_page/archieve_page_view.dart';
     MaterialRoute(page: ProfileView),
     MaterialRoute(page: EditProfileView),
     MaterialRoute(page: ArchievePageView),
+    MaterialRoute(page: FavoredPageView),
 // @stacked-route
   ],
   dependencies: [

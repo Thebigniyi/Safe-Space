@@ -704,6 +704,13 @@ class MockDiaryService extends _i1.Mock implements _i8.DiaryService {
       ) as List<_i9.DiaryEntry>);
 
   @override
+  List<_i9.DiaryEntry> get favoredEntries => (super.noSuchMethod(
+        Invocation.getter(#favoredEntries),
+        returnValue: <_i9.DiaryEntry>[],
+        returnValueForMissingStub: <_i9.DiaryEntry>[],
+      ) as List<_i9.DiaryEntry>);
+
+  @override
   int get listenersCount => (super.noSuchMethod(
         Invocation.getter(#listenersCount),
         returnValue: 0,
@@ -711,9 +718,27 @@ class MockDiaryService extends _i1.Mock implements _i8.DiaryService {
       ) as int);
 
   @override
+  void addToAndremoveFrom(_i9.DiaryEntry? entry) => super.noSuchMethod(
+        Invocation.method(
+          #addToAndremoveFrom,
+          [entry],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   void addToArchieve(_i9.DiaryEntry? entry) => super.noSuchMethod(
         Invocation.method(
           #addToArchieve,
+          [entry],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void removeFromArchieve(_i9.DiaryEntry? entry) => super.noSuchMethod(
+        Invocation.method(
+          #removeFromArchieve,
           [entry],
         ),
         returnValueForMissingStub: null,
